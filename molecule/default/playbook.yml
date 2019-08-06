@@ -1,0 +1,24 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+
+  vars:
+    my_user: jerry
+
+  pre_tasks:
+    - name: Create a user that will receive htoprc
+      user:
+        name: "{{ my_user }}"
+
+  roles:
+    - role: ansible-role-htop
+      vars:
+        htop_htoprc_destinations:
+          skell:
+            dest: /etc/skel/.config/htop
+          another_user:
+            dest: "/home/{{ my_user }}/.config/htop"
+            owner: "{{ my_user }}"
+            group: "{{ my_user }}"
+            mode: "0644"
